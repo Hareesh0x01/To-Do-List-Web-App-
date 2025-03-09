@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funky To-Do List App</title>
+    <!-- Relaxed CSP for book repository deployment -->
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self' *;
+        style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com *;
+        script-src 'self' 'unsafe-inline' *;
+        font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com data: *;
+        img-src 'self' data: blob: *;
+        media-src 'self' https://assets.mixkit.co blob: data: *;
+        connect-src 'self' https://assets.mixkit.co *;
+    ">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Righteous&family=Poppins:wght@400;600&display=swap">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ff00cc">
+    <link rel="apple-touch-icon" href="data:image/png;base64,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">
+    
+    <!-- Add data URIs for PWA icons -->
+    <script>
+        // Generate the icon files dynamically on page load
+        window.addEventListener('load', function() {
+            // Create basic icon data URI (a simple gradient colored circle)
+            const iconDataURI = 'data:image/png;base64,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';
+            
+            // Generate the icons dynamically and save to files
+            createIconFile('icons/icon-192x192.png', iconDataURI);
+            createIconFile('icons/icon-512x512.png', iconDataURI);
+        });
+        
+        // Helper function to create an icon file from a data URI
+        function createIconFile(filename, dataURI) {
+            // Convert the data URI to a Blob
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const ab = new ArrayBuffer(byteString.length);
+            const ia = new Uint8Array(ab);
+            for (let i = 0; i < byteString.length; i++) {
+                ia[i] = byteString.charCodeAt(i);
+            }
+            const blob = new Blob([ab], {type: mimeString});
+            
+            // We don't actually save the file here since we can't in the browser,
+            // but we log that we would have created the file
+            console.log(`Would create icon file ${filename} (${blob.size} bytes)`);
+        }
+    </script>
+</head>
+<body>
+    <div class="background-container">
+        <div class="animated-shape shape1"></div>
+        <div class="animated-shape shape2"></div>
+        <div class="animated-shape shape3"></div>
+        <div class="animated-shape shape4"></div>
+    </div>
+    
+    <!-- Side decorations to fill empty space -->
+    <div class="side-decoration left-decoration">
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+    </div>
+    
+    <div class="side-decoration right-decoration">
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+        <div class="decoration-item"></div>
+    </div>
+    
+    <div class="theme-toggle">
+        <button id="themeToggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+    
+    <div class="container">
+        <h1 class="funky-title">Funky To-Do List</h1>
+        
+        <!-- Main task input form -->
+        <div class="todo-input">
+            <input type="text" id="taskInput" placeholder="Add a new task...">
+            <div class="task-options">
+                <div class="option">
+                    <label for="alarmTime">Alarm:</label>
+                    <div class="date-picker-wrapper">
+                        <input type="datetime-local" id="alarmTime">
+                        <div class="date-picker-buttons">
+                            <button type="button" id="clearDateBtn" class="date-btn">
+                                <i class="fas fa-times"></i> Clear
+                            </button>
+                            <button type="button" id="selectDateBtn" class="date-btn">
+                                <i class="fas fa-check"></i> Set Date
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="option sound-option">
+                    <label for="alarmSound">Sound:</label>
+                    <div class="sound-selector">
+                        <select id="alarmSound">
+                            <option value="sound1">Classic Beep</option>
+                            <option value="sound2">Fun Chime</option>
+                            <option value="sound3">Funky Beat</option>
+                            <option value="sound4">Alert Buzz</option>
+                            <option value="sound5">Gentle Bell</option>
+                        </select>
+                        <button id="testSoundBtn" class="test-sound-btn" title="Test Sound">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button id="addBtn">Add Task</button>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+            <button class="filter-btn" data-filter="alarm">With Alarm</button>
+        </div>
+        
+        <!-- Task list -->
+        <ul id="taskList" class="todo-list">
+            <!-- Tasks will be added here dynamically -->
+        </ul>
+        
+        <!-- Developer credit with RGB animation -->
+        <div class="developer-credit">
+            <p>Developed by <span id="developerName">Hareesh Kumar</span></p>
+        </div>
+    </div>
+    
+    <!-- Alarm notification -->
+    <div id="notification" class="notification">
+        <div class="notification-content">
+            <h3>Task Reminder!</h3>
+            <p id="notification-message"></p>
+            <div class="notification-actions">
+                <div class="snooze-options">
+                    <select id="snoozeTime">
+                        <option value="5">Snooze 5 min</option>
+                        <option value="10">Snooze 10 min</option>
+                        <option value="15">Snooze 15 min</option>
+                    </select>
+                    <button id="snooze-btn">Snooze</button>
+                </div>
+                <button id="notification-close">Dismiss</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit task modal -->
+    <div id="editTaskModal" class="edit-task-modal">
+        <div class="edit-task-modal-content">
+            <h3>Edit Task</h3>
+            <div class="edit-form">
+                <div class="edit-form-group">
+                    <label for="editTaskText">Task:</label>
+                    <input type="text" id="editTaskText">
+                </div>
+                
+                <div class="edit-form-group">
+                    <label for="editTaskDate">Alarm:</label>
+                    <div class="date-picker-wrapper">
+                        <input type="datetime-local" id="editTaskDate">
+                    </div>
+                </div>
+                
+                <div class="edit-form-group">
+                    <label for="editTaskSound">Sound:</label>
+                    <div class="sound-selector">
+                        <select id="editTaskSound">
+                            <option value="sound1">Classic Beep</option>
+                            <option value="sound2">Fun Chime</option>
+                            <option value="sound3">Funky Beat</option>
+                            <option value="sound4">Alert Buzz</option>
+                            <option value="sound5">Gentle Bell</option>
+                        </select>
+                        <button id="editTestSoundBtn" class="test-sound-btn" title="Test Sound">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="edit-task-modal-buttons">
+                <button id="cancelEditBtn">Cancel</button>
+                <button id="saveEditBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Improved date picker modal -->
+    <div id="datePickerModal" class="date-picker-modal">
+        <div class="date-picker-modal-content">
+            <h3>Select Date & Time</h3>
+            <div class="date-time-inputs">
+                <div class="date-input-group">
+                    <label for="datePicker">Date:</label>
+                    <input type="date" id="datePicker">
+                </div>
+                <div class="time-input-group">
+                    <label for="timePicker">Time:</label>
+                    <input type="time" id="timePicker">
+                </div>
+            </div>
+            <div class="date-picker-modal-buttons">
+                <button id="cancelDateBtn">Cancel</button>
+                <button id="confirmDateBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements with preload="none" to avoid loading issues -->
+    <div id="audioErrorContainer" class="audio-error-container"></div>
+    <audio id="sound1" preload="none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
+        <source src="sounds/beep.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound2" preload="none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-magic-notification-chime-1799.mp3" type="audio/mpeg">
+        <source src="sounds/chime.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound3" preload="none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-fun-toy-music-notification-508.mp3" type="audio/mpeg">
+        <source src="sounds/music.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound4" preload="none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-alert-quick-chime-766.mp3" type="audio/mpeg">
+        <source src="sounds/alert.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="sound5" preload="none">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-bell-notification-933.mp3" type="audio/mpeg">
+        <source src="sounds/bell.mp3" type="audio/mpeg">
+    </audio>
+    
+    <!-- Scripts -->
+    <script type="text/javascript">
+        // Load JavaScript files with correct paths regardless of deployment environment
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure all resources are loaded properly
+            const scriptSrc = 'improved.js';
+            const styleSrc = 'style.css';
+            
+            // Function to load script dynamically
+            function loadScript(src, async = false) {
+                return new Promise((resolve, reject) => {
+                    const script = document.createElement('script');
+                    script.src = src;
+                    script.async = async;
+                    script.onload = resolve;
+                    script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+                    document.head.appendChild(script);
+                });
+            }
+            
+            // Load improved.js
+            loadScript(scriptSrc)
+                .then(() => {
+                    console.log(`Successfully loaded ${scriptSrc}`);
+                })
+                .catch(error => {
+                    console.error(error);
+                    showResourceError(`Failed to load essential script: ${scriptSrc}. The app may not function correctly.`);
+                });
+            
+            // Function to show resource errors
+            function showResourceError(message) {
+                const errorContainer = document.createElement('div');
+                errorContainer.style.position = 'fixed';
+                errorContainer.style.top = '10px';
+                errorContainer.style.left = '50%';
+                errorContainer.style.transform = 'translateX(-50%)';
+                errorContainer.style.background = 'rgba(255,0,0,0.8)';
+                errorContainer.style.color = 'white';
+                errorContainer.style.padding = '10px';
+                errorContainer.style.borderRadius = '5px';
+                errorContainer.style.zIndex = '9999';
+                errorContainer.style.textAlign = 'center';
+                errorContainer.style.maxWidth = '80%';
+                errorContainer.textContent = message;
+                document.body.appendChild(errorContainer);
+            }
+        });
+    </script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        // Register service worker for PWA support with path flexibility for different deployment scenarios
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Check if we're on a supported protocol (http, https, or localhost)
+                const isLocalhost = Boolean(
+                    window.location.hostname === 'localhost' ||
+                    window.location.hostname === '[::1]' ||
+                    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+                );
+                
+                const isHttps = window.location.protocol === 'https:';
+                const isHttp = window.location.protocol === 'http:';
+                
+                if (isHttps || (isHttp && isLocalhost)) {
+                    // Get the base path for the current deployment
+                    const basePath = new URL('.', window.location.href).pathname;
+                    
+                    // Supported protocol - register the service worker
+                    navigator.serviceWorker.register(
+                        // Use a relative path that will work in any deployment context
+                        new URL('service-worker.js', window.location.href).pathname
+                    )
+                    .then(reg => {
+                        console.log('Service worker registered!', reg);
+                    })
+                    .catch(err => {
+                        console.log('Service worker registration failed:', err);
+                        showError('Service worker registration failed: ' + err.message);
+                    });
+                } else {
+                    // Unsupported protocol - show helpful message
+                    console.log('Service worker not registered: Protocol not supported');
+                    showWarning('PWA features disabled: Please open this app using a web server (http://localhost) instead of directly from your file system. The app will still work, but without offline support or installation capability.');
+                }
+            });
+        } else {
+            console.log('Service workers not supported by this browser');
+        }
+        
+        function showError(message) {
+            const errorContainer = document.createElement('div');
+            errorContainer.style.position = 'fixed';
+            errorContainer.style.bottom = '10px';
+            errorContainer.style.right = '10px';
+            errorContainer.style.background = 'rgba(255,0,0,0.8)';
+            errorContainer.style.color = 'white';
+            errorContainer.style.padding = '10px';
+            errorContainer.style.borderRadius = '5px';
+            errorContainer.style.zIndex = '9999';
+            errorContainer.textContent = message;
+            document.body.appendChild(errorContainer);
+            setTimeout(() => errorContainer.remove(), 5000);
+        }
+        
+        function showWarning(message) {
+            const warningContainer = document.createElement('div');
+            warningContainer.style.position = 'fixed';
+            warningContainer.style.bottom = '10px';
+            warningContainer.style.right = '10px';
+            warningContainer.style.background = 'rgba(255, 165, 0, 0.8)';
+            warningContainer.style.color = 'black';
+            warningContainer.style.padding = '10px';
+            warningContainer.style.borderRadius = '5px';
+            warningContainer.style.zIndex = '9999';
+            warningContainer.style.maxWidth = '300px';
+            warningContainer.textContent = message;
+            document.body.appendChild(warningContainer);
+            setTimeout(() => warningContainer.remove(), 10000);
+        }
+    </script>
+
+    <!-- Fallback script in case dynamic loading fails -->
+    <script type="text/javascript">
+        // Wait 5 seconds and check if app initialized
+        setTimeout(function() {
+            // Check if core app functions exist
+            if (typeof window.appInitialized === 'undefined') {
+                console.error('App failed to initialize properly after timeout');
+                
+                // Create fallback starter
+                const fallbackStarter = document.createElement('div');
+                fallbackStarter.style.position = 'fixed';
+                fallbackStarter.style.top = '50%';
+                fallbackStarter.style.left = '50%';
+                fallbackStarter.style.transform = 'translate(-50%, -50%)';
+                fallbackStarter.style.background = 'rgba(255,255,255,0.9)';
+                fallbackStarter.style.padding = '20px';
+                fallbackStarter.style.borderRadius = '10px';
+                fallbackStarter.style.boxShadow = '0 4px 20px rgba(0,0,0,0.2)';
+                fallbackStarter.style.zIndex = '10000';
+                fallbackStarter.style.textAlign = 'center';
+                fallbackStarter.style.maxWidth = '80%';
+                
+                fallbackStarter.innerHTML = `
+                    <h3>App Loading Issue Detected</h3>
+                    <p>The app script may have failed to load properly. Click the button below to try loading the app again.</p>
+                    <button id="fallbackStartBtn" style="background: linear-gradient(135deg, #ff00cc, #3333ff); color: white; border: none; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: bold; margin-top: 15px;">Start App</button>
+                `;
+                
+                document.body.appendChild(fallbackStarter);
+                
+                // Add click handler to fallback button
+                document.getElementById('fallbackStartBtn').addEventListener('click', function() {
+                    // Hide the fallback starter
+                    fallbackStarter.style.display = 'none';
+                    
+                    // Try to load the script directly
+                    const script = document.createElement('script');
+                    script.src = 'improved.js';
+                    document.head.appendChild(script);
+                    
+                    // Show loading indicator
+                    const loadingMsg = document.createElement('div');
+                    loadingMsg.textContent = 'Loading app...';
+                    loadingMsg.style.position = 'fixed';
+                    loadingMsg.style.top = '10px';
+                    loadingMsg.style.right = '10px';
+                    loadingMsg.style.background = 'rgba(0,0,0,0.7)';
+                    loadingMsg.style.color = 'white';
+                    loadingMsg.style.padding = '8px 12px';
+                    loadingMsg.style.borderRadius = '4px';
+                    document.body.appendChild(loadingMsg);
+                    
+                    // Remove loading message after 3 seconds
+                    setTimeout(function() {
+                        loadingMsg.remove();
+                    }, 3000);
+                });
+            }
+        }, 5000);
+    </script>
+</body>
+</html> 
